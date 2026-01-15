@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Completo - Lolo's Café</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link rel="stylesheet" href="src/css/footer.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="./public/images/LOGO_LOLOSCAFE_VECTORIZADO.svg" alt="Lolo's Café Logo">
+            </div>
+            <nav class="nav">
+                <a href="#home">HOME</a>
+                <a href="#contacto">CONTACTO</a>
+                <a href="#sobre-nosotros">SOBRE NOSOTROS</a>
+            </nav>
+           <div class="header-actions">
+                <button class="menu-btn">MENÚ</button>
+                <button class="icon-btn">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" stroke="#31312D" stroke-width="1.5" fill="none"/>
+                    <path d="M 4 20 Q 4 16 12 16 Q 20 16 20 20" stroke="#31312D" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <button class="icon-btn">
+                    <animated-icons class="icon-animated"
+                    src="https://animatedicons.co/get-icon?name=Cart&style=minimalistic&token=46475390-3e9d-4ccd-9834-a94888682feb"
+                    trigger="loop-on-hover"
+                    attributes='{"variationThumbColour":"#FFFFFF","variationName":"Normal","variationNumber":1,"numberOfGroups":1,"backgroundIsGroup":false,"strokeWidth":2.5,"defaultColours":{"group-1":"#000000","background":"#FFFFFF"}}'>
+                    </animated-icons>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <a href="#" class="back-btn">←</a>
+            <h1>Registro</h1>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section class="registration-section-complete">
+        <div class="container">
+            <!-- Image Banner Placeholder -->
+            <div class="registration-banner">
+                <img src="" alt="Granos de café">
+            </div>
+
+            <!-- Form -->
+            <div class="registration-form-complete">
+                <p class="registration-subtitle">Regístrate para obtener beneficios con cada compra</p>
+                
+                <form>
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="name" placeholder="Juan" required>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="form-group">
+                        <label for="lastname">Apellido</label>
+                        <input type="text" id="lastname" name="lastname" placeholder="Pérez" required>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-group">
+                        <label for="phone">Número de teléfono</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+52 000 000 0000" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="email@ejemplo.com" required>
+                    </div>
+
+                    <!-- Birth Date -->
+                    <div class="form-group">
+                        <label>Fecha de nacimiento</label>
+                        <div class="birth-date-group">
+                            <select id="day" name="day" required>
+                                <option value="">Día</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                                <option value="31">31</option>
+                            </select>
+
+                            <select id="month" name="month" required>
+                                <option value="">Mes</option>
+                                <option value="Enero">Enero</option>
+                                <option value="Febrero">Febrero</option>
+                                <option value="Marzo">Marzo</option>
+                                <option value="Abril">Abril</option>
+                                <option value="Mayo">Mayo</option>
+                                <option value="Junio">Junio</option>
+                                <option value="Julio">Julio</option>
+                                <option value="Agosto">Agosto</option>
+                                <option value="Septiembre">Septiembre</option>
+                                <option value="Octubre">Octubre</option>
+                                <option value="Noviembre">Noviembre</option>
+                                <option value="Diciembre">Diciembre</option>
+                            </select>
+
+                            <select id="year" name="year" required>
+                                <option value="">Año</option>
+                                <option value="1990">1990</option>
+                                <option value="1991">1991</option>
+                                <option value="1992">1992</option>
+                                <option value="1993">1993</option>
+                                <option value="1994">1994</option>
+                                <option value="1995">1995</option>
+                                <option value="1996">1996</option>
+                                <option value="1997">1997</option>
+                                <option value="1998">1998</option>
+                                <option value="1999">1999</option>
+                                <option value="2000">2000</option>
+                                <option value="2001">2001</option>
+                                <option value="2002">2002</option>
+                                <option value="2003">2003</option>
+                                <option value="2004">2004</option>
+                                <option value="2005">2005</option>
+                                <option value="2006">2006</option>
+                                <option value="2007">2007</option>
+                                <option value="2008">2008</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <label for="gender">Género</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Selecciona</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="otro">Otro</option>
+                            <option value="prefiero-no">Prefiero no responder</option>
+                        </select>
+                    </div>
+
+                    <!-- Checkbox Privacy -->
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="privacy" name="privacy" required>
+                        <label for="privacy">He leído y acepto el <a href="#">aviso de privacidad</a></label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-submit">REGISTRARME →</button>
+                </form>
+
+                <!-- Login Link -->
+                <p class="login-link">¿Ya tienes una cuenta? <a href="#">Inicia sesión aquí</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-wrapper">
+            <h2 class="footer-title">Calidad y corazón en cada taza</h2>
+            <div class="footer-grid">
+
+                <!-- Logo + redes -->
+                <div class="footer-brand">
+                    <img src="./public/images/LOGO_LOLOSCAFE_VECTORIZADO.svg" alt="Lolo's Café">
+
+                    <div class="footer-social-icons">
+                            <a href="#" title="Facebook">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a2 2 0 0 1 2-2h1z"></path>
+                              </svg>
+                            </a>
+                            <a href="#" title="Instagram">
+                              <svg class="icon" viewBox="0 0 24 24">
+                                <rect x="2" y="2" width="20" height="20" rx="4" stroke="#31312D" stroke-width="1.5" fill="none"/>
+                                <circle cx="12" cy="12" r="5" stroke="#31312D" stroke-width="1.5" fill="none"/>
+                                <circle cx="17" cy="7" r="1" fill="#31312D"/>
+                              </svg>
+                            </a>
+                            <a href="#" title="Teléfono">
+                              <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M 6 3 L 6 21 Q 6 22 7 22 L 17 22 Q 18 22 18 21 L 18 3 Q 18 2 17 2 L 7 2 Q 6 2 6 3" stroke="#31312D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="8" y1="19" x2="16" y2="19" stroke="#31312D" stroke-width="1.5" stroke-linecap="round"/>
+                              </svg>
+                            </a>
+                        </div>
+                </div>
+
+                <!-- Dirección -->
+                <div class="footer-block">
+                    <h3>Dirección</h3>
+                    <p>Presa Miguel Hidalgo 485<br>
+                    Gustavo Díaz Ordaz<br>
+                    81343
+                    </p>
+                </div>
+
+                <!-- Horarios -->
+                <div class="footer-block">
+                    <h3>Horarios</h3>
+                    <p>Martes a Domingo<br>
+                    11:00 a.m. - 9:00 p.m.
+                    </p>
+                </div>
+
+                <!-- Links -->
+                <div class="footer-links">
+                    <a href="#">Preguntas frecuentes</a>
+                    <a href="#">Aviso de privacidad</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://animatedicons.co/scripts/embed-animated-icons.js"></script>
+
+</body>
+</html>
