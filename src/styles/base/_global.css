@@ -2,7 +2,6 @@ html {
     font-size: 62.5%;
 }
 
-
 /* -----------------------------
     Typography
 -------------------------------- */
@@ -16,7 +15,6 @@ h4 {
     line-height: var(--lh-heading);
 }
 
-/* Display font for H1 (as you requested) */
 h1 {
     font-family: var(--font-display);
     font-size: var(--fs-h1);
