@@ -83,7 +83,7 @@ document.querySelector('.btn-submit').addEventListener('click', function(e) {
     console.log("Data saved for complete form");
     
     // Redirect to complete form
-    window.location.href = "./signupFull.html";
+    window.location.href = "./signup-full.html";
     
     return true;
 });
