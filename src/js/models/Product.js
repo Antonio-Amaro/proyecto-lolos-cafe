@@ -1,3 +1,4 @@
+// models/Product.js
 export class Product {
   constructor(id, title, description, image, isActive = true) {
     this.id = id;
@@ -5,8 +6,8 @@ export class Product {
     this.description = description;
     this.image = image;
     this.isActive = isActive;
-    this.isNew = true; // Podrías cambiar esto a false después de X tiempo
     this.createdAt = new Date().toISOString();
+    this.type = "product"; // Por defecto
   }
 }
 
@@ -24,11 +25,12 @@ export class DrinkProduct extends Product {
 }
 
 export class DessertProduct extends Product {
-  constructor(id, title, description, image, isActive, unitPrice, slicePrice, isPromo = false) {
+  constructor(id, title, description, image, isActive, price, isPromo = false, category = "Postres", slicePrice = 0) {
     super(id, title, description, image, isActive);
-    this.unitPrice = unitPrice || 0;
-    this.slicePrice = slicePrice || 0;
+    this.price = price || 0; // Precio por pieza completa
     this.isPromo = isPromo;
+    this.category = category; // Postres, Extras, Promociones
+    this.slicePrice = slicePrice || 0; // Precio por rebanada (opcional)
     this.type = "dessert";
   }
 }
