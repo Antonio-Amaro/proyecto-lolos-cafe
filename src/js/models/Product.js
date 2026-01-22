@@ -1,50 +1,48 @@
 export class Product {
-    constructor(id, name, description, category, image, isActive = true) {
-        this.id = id || Date.now();
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.image = image;
-        this.price = price;
-        this.isActive = isActive;
-        this.createdAt = new Date();
-    }
+  constructor(id, title, description, image, isActive = true) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.image = image;
+    this.isActive = isActive;
+    this.createdAt = new Date().toISOString();
+  }
 }
 
-// HIJO: BEBIDA
 export class DrinkProduct extends Product {
-    constructor(
-        id,
-        name,
-        description,
-        image,
-        price,
-        isActive,
-        sizes = ['pequeño', 'mediano', 'grande'],
-        temperatures = ['fría', 'caliente'],
-        milks = ['leche deslactosada', 'leche entera', 'leche de almendra', 'leche de soya'],
-        toppings = []
-    ) {
-        super(id, name, description, category, image, price, isActive);
-        this.sizes = sizes;
-        this.temperatures = temperatures;
-        this.milks = milks;
-        this.toppings = toppings;
-    }
+  constructor(
+    id,
+    title,
+    description,
+    image,
+    isActive,
+    section,
+    sizes,
+    temperatures,
+    milks,
+    toppings
+  ) {
+    super(id, title, description, image, isActive);
+    this.section = section;       // "Con café" / "Sin café"
+    this.sizes = sizes;           // { Chico: 45, Mediano: 55 }
+    this.temperatures = temperatures; // ["Caliente", "Frío"]
+    this.milks = milks;           // ["Regular", "Coco"]
+    this.toppings = toppings;     // ["Tapioca", "Foam"]
+  }
 }
 
-
-// HIJO: POSTRE
 export class DessertProduct extends Product {
-    constructor(
-        id,
-        name,
-        description,
-        image,
-        isActive,
-        slicePrice = null
-    ) {
-        super(id, name, description, category, image, slicePrice, isActive);
-        this.slicePrice = slicePrice;
-    }
+  constructor(
+    id,
+    title,
+    description,
+    image,
+    isActive,
+    unitPrice,
+    slicePrice
+  ) {
+    super(id, title, description, image, isActive);
+    this.unitPrice = unitPrice;   // number | null
+    this.slicePrice = slicePrice; // number | null
+  }
 }
