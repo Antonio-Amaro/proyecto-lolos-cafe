@@ -9,7 +9,7 @@
 	const changeBtn = document.getElementById("changeImageBtn");
 	const removeBtn = document.getElementById("removeImageBtn");
 
-	if (!dropzone || !input) return; // Evita errores si no existe el bloque en esta página	
+	if (!dropzone || !input) return; // Avoid errors if the block doesn't exist on this page	
 		const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 	const VALID_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];	
 	function showError(msg) {
@@ -56,17 +56,17 @@
 		toPreview(file);
 	}
 
-	// Click en dropzone abre el input
+	// Click on dropzone opens the file input
 	dropzone.addEventListener("click", () => input.click());
 
-	// Accesibilidad: Enter/Espacio activan
+	// Accessibility: Enter/Space activate
 	dropzone.addEventListener("keydown", (e) => {
 		if (e.key === "Enter" || e.key === " ") {
      	e.preventDefault();
      	input.click();
 	}});
 
-	// Cambios desde el selector
+	// Changes from the file picker
 	input.addEventListener("change", (e) => handleFiles(e.target.files));
 
   // Drag & drop
@@ -90,7 +90,7 @@
 		handleFiles(dt.files);
 	});
 
-  // Botones de acción
+  // Action buttons
 	changeBtn?.addEventListener("click", () => input.click());
 	removeBtn?.addEventListener("click", resetPreview);
 })();

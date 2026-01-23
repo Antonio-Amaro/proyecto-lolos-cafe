@@ -1,4 +1,4 @@
-// adminMenu.js - CORRECCIÓN SOLO PARA EDITAR POSTRES
+// adminMenu.js — fix for editing desserts only
 import { ProductsController } from "./controllers/productController.js";
 import { DrinkProduct, DessertProduct } from "./models/Product.js";
 
@@ -6,15 +6,15 @@ const controller = new ProductsController();
 let editingProductId = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ELEMENTOS
+  // Elements
   const modalEl = document.getElementById("modal-drink");
   const modal = new bootstrap.Modal(modalEl);
   const form = document.getElementById("product-form");
   
-  // Campos específicos
+  // Specific fields
   const drinkSection = document.getElementById("drink-section");
   
-  // Crear sección de postres dinámicamente
+  // Create dessert section dynamically
   let dessertSection = document.getElementById('dessert-section');
   if (!dessertSection) {
     dessertSection = document.createElement('div');
@@ -41,38 +41,38 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
     
-    // Insertar después del fieldset de tipo de producto
+    // Insert after the product-type fieldset
     const typeFieldset = document.querySelector('fieldset.mb-4');
     if (typeFieldset) {
       typeFieldset.parentNode.insertBefore(dessertSection, drinkSection);
     }
   }
   
-  // Ocultar las opciones de bebidas cuando seleccione postre
+  // Hide drink options when dessert is selected
   const drinkOptionsSection = document.querySelector('.container-fluid.pt-1.px-0');
   
-  // Elementos de la imagen
+  // Image elements
   const imageInput = document.getElementById("productImage");
   const imagePreview = document.getElementById("previewImage");
   const dropzoneContent = document.getElementById("dropzoneContent");
   const previewWrapper = document.getElementById("previewWrapper");
   
-  // Contenedor de productos
+  // Products container
   const container = document.querySelector(".row.g-4");
 
-  // Botones del modal
+  // Modal buttons
   const modalFooter = document.querySelector('.modal .row.m-4');
   
-  // CARGAR DESDE STORAGE
+  // LOAD FROM STORAGE
   controller.loadFromStorage();
   
-  // Inicializar mostrando todos los productos
+  // Initialize by showing all products
   renderAllProducts();
   
-  // Configurar los botones de categoría
+  // Set up category buttons
   setupCategoryButtons();
 
-  // Mostrar/ocultar campos según tipo de producto
+  // Show/hide fields based on product type
   document.querySelectorAll('input[name="product-type"]').forEach((radio) => {
     radio.addEventListener("change", (e) => {
       if (e.target.value === "drink") {
@@ -87,20 +87,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Inicializar: mostrar campos de bebida por defecto
+  // Initialize: show drink fields by default
   if (drinkOptionsSection) {
     drinkOptionsSection.style.display = "block";
   }
 
-  // SUBMIT FORM - MODIFICADO PARA CORREGIR PROBLEMAS
+  // SUBMIT FORM — adjusted to fix issues
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     await handleFormSubmit();
   });
 
-  // Función para manejar el envío del formulario - CORREGIDA
+  // Function to handle form submission — fixed
   async function handleFormSubmit() {
-    // Validar imagen
+    // Validate image
     const imageFile = imageInput.files[0];
     let imageData = "";
     
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       reader.readAsDataURL(imageFile);
     } else {
-      // Si hay imagen existente en preview (mantener la misma imagen)
+      // If there's an existing preview image (keep the same image)
       imageData = imagePreview.src.startsWith("blob:") ? "" : imagePreview.src;
       await processFormSubmission(imageData);
     }
@@ -125,23 +125,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const isActive = document.getElementById("product-active").checked;
     const type = document.querySelector('input[name="product-type"]:checked').value;
 
-    // Validaciones básicas
+    // Basic validations
     if (!title || !description) {
       alert("Por favor completa todos los campos obligatorios");
       return;
     }
 
-    // EDIT MODE - CORRECCIÓN PRINCIPAL PARA POSTRES
+    // EDIT MODE - Main fix for desserts
     if (editingProductId) {
-      // Buscar el producto existente
+      // Find the existing product
       const existingProductIndex = controller.products.findIndex(p => p.id === editingProductId);
       
       if (existingProductIndex !== -1) {
         if (type === "drink") {
-          // Actualizar bebida existente
+          // Update existing drink
           const section = document.getElementById("product-section").value;
 
-          // Obtener tamaños y precios
+          // Get sizes and prices
           const sizes = {};
           if (document.getElementById("size-ch").checked) {
             sizes.chico = parseFloat(document.getElementById("price-ch").value) || 0;
@@ -153,12 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
             sizes.grande = parseFloat(document.getElementById("price-g").value) || 0;
           }
 
-          // Temperaturas
+          // Temperatures
           const temperatures = Array.from(
             document.querySelectorAll('input[name="temperatures[]"]:checked')
           ).map((t) => t.value);
 
-          // Leches
+          // Milks
           const milks = Array.from(
             document.querySelectorAll('input[name="milks[]"]:checked')
           ).map((m) => m.value);
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll('input[name="extras[]"]:checked')
           ).map((t) => t.value);
 
-          // Crear nueva bebida con el mismo ID
+          // Create new drink with the same ID
           const updatedDrink = new DrinkProduct(
             editingProductId,
             title,
@@ -183,27 +183,27 @@ document.addEventListener("DOMContentLoaded", () => {
             isPromo
           );
           
-          // Reemplazar en el array
+          // Replace in the array
           controller.products[existingProductIndex] = updatedDrink;
           
         } else {
-          // Actualizar postre existente - CORRECCIÓN CLAVE AQUÍ
+          // Update existing dessert — key fix here
           const category = document.getElementById("dessert-category").value;
           const price = parseFloat(document.getElementById("dessert-price").value) || 0;
           const slicePrice = parseFloat(document.getElementById("dessert-slice-price").value) || 0;
           
-          // Validar precio
+          // Validate price
           if (price <= 0) {
             alert("Debes ingresar un precio válido para el postre");
             return;
           }
 
-          // Si el producto existente es una bebida, crear un nuevo postre
-          // Si ya es postre, actualizarlo
+          // If the existing product is a drink, create a new dessert
+          // If it's already a dessert, update it
           const existingProduct = controller.products[existingProductIndex];
           
           if (existingProduct.type === 'drink' || existingProduct instanceof DrinkProduct) {
-            // Cambiar de bebida a postre - crear nuevo postre
+            // Change from drink to dessert — create new dessert
             const newDessert = new DessertProduct(
               editingProductId,
               title,
@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             controller.products[existingProductIndex] = newDessert;
           } else {
-            // Ya es postre, actualizar propiedades
+            // Already a dessert — update properties
             existingProduct.title = title;
             existingProduct.description = description;
             existingProduct.image = imageData;
@@ -229,10 +229,10 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
         
-        // Guardar cambios
+        // Save changes
         controller.saveToStorage();
         
-        // Recargar la vista actual
+        // Reload the current view
         const activeCategory = getActiveCategory();
         filterProductsByCategory(activeCategory);
         
@@ -244,11 +244,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // CREATE NEW - Crear nuevo producto
+    // CREATE NEW - Create new product
     if (type === "drink") {
       const section = document.getElementById("product-section").value;
 
-      // Obtener tamaños y precios
+      // Get sizes and prices
       const sizes = {};
       if (document.getElementById("size-ch").checked) {
         sizes.chico = parseFloat(document.getElementById("price-ch").value) || 0;
@@ -260,18 +260,18 @@ document.addEventListener("DOMContentLoaded", () => {
         sizes.grande = parseFloat(document.getElementById("price-g").value) || 0;
       }
 
-      // Validar que haya al menos un tamaño seleccionado
+      // Validate at least one size is selected
       if (Object.keys(sizes).length === 0) {
         alert("Debes seleccionar al menos un tamaño para la bebida");
         return;
       }
 
-      // Temperaturas
+      // Temperatures
       const temperatures = Array.from(
         document.querySelectorAll('input[name="temperatures[]"]:checked')
       ).map((t) => t.value);
 
-      // Leches
+      // Milks
       const milks = Array.from(
         document.querySelectorAll('input[name="milks[]"]:checked')
       ).map((m) => m.value);
@@ -295,12 +295,12 @@ document.addEventListener("DOMContentLoaded", () => {
       ]);
       
     } else {
-      // Crear nuevo postre
+      // Create new dessert
       const category = document.getElementById("dessert-category").value;
       const price = parseFloat(document.getElementById("dessert-price").value) || 0;
       const slicePrice = parseFloat(document.getElementById("dessert-slice-price").value) || 0;
       
-      // Validar precio
+      // Validate price
       if (price <= 0) {
         alert("Debes ingresar un precio válido para el postre");
         return;
@@ -318,7 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ]);
     }
 
-    // Recargar la vista actual
+    // Reload current view
     const activeCategory = getActiveCategory();
     filterProductsByCategory(activeCategory);
     
@@ -326,25 +326,25 @@ document.addEventListener("DOMContentLoaded", () => {
     resetForm();
   }
 
-  // Función para actualizar el botón del modal
+  // Function to update the modal button
   function updateModalButton() {
     if (!modalFooter) return;
     
     const buttonContainer = modalFooter.querySelector('.d-flex');
     if (!buttonContainer) return;
     
-    // Limpiar botones existentes
+    // Clear existing buttons
     buttonContainer.innerHTML = '';
     
     if (editingProductId) {
-      // Botón de Actualizar cuando se está editando
+      // Update button when editing
       const updateBtn = document.createElement('button');
       updateBtn.className = 'btn btn-primary px-4';
       updateBtn.type = 'button';
       updateBtn.textContent = 'Actualizar producto';
       updateBtn.addEventListener('click', handleFormSubmit);
       
-      // Botón de Cancelar
+      // Cancel button
       const cancelBtn = document.createElement('button');
       cancelBtn.className = 'btn btn-outline-secondary px-4 ms-2';
       cancelBtn.type = 'button';
@@ -359,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
       buttonContainer.appendChild(updateBtn);
       buttonContainer.appendChild(cancelBtn);
     } else {
-      // Botón de Agregar por defecto
+      // Default Add button
       const addBtn = document.createElement('button');
       addBtn.className = 'btn btn-dark px-4';
       addBtn.type = 'button';
@@ -372,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function resetForm() {
     form.reset();
-    // Resetear preview de imagen
+    // Reset image preview
     if (imagePreview.src.startsWith("blob:")) {
       URL.revokeObjectURL(imagePreview.src);
     }
@@ -381,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dropzoneContent.classList.remove("d-none");
     imageInput.value = "";
     
-    // Resetear checkboxes de tamaños
+    // Reset size checkboxes
     document.querySelectorAll('.size-check').forEach(check => {
       const input = document.getElementById(check.dataset.target);
       if (input) {
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     
-    // Resetear checkboxes de temperaturas, leches y extras
+    // Reset temperature, milk, and extras checkboxes
     document.querySelectorAll('input[name="temperatures[]"]').forEach(input => {
       input.checked = false;
     });
@@ -403,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
       input.checked = false;
     });
     
-    // Marcar "Caliente" y "Regular" por defecto
+    // Set 'Hot' and 'Regular' by default
     const calienteCheck = document.getElementById("temp-caliente");
     const regularCheck = document.getElementById("milk-regular");
     const sinExtrasCheck = document.getElementById("extra-no");
@@ -412,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (regularCheck) regularCheck.checked = true;
     if (sinExtrasCheck) sinExtrasCheck.checked = true;
     
-    // Mostrar campos de bebida por defecto
+    // Show drink fields by default
     const drinkRadio = document.querySelector('input[name="product-type"][value="drink"]');
     if (drinkRadio) {
       drinkRadio.checked = true;
@@ -421,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dessertSection) dessertSection.style.display = "none";
     if (drinkOptionsSection) drinkOptionsSection.style.display = "block";
     
-    // Resetear campos de postres
+    // Reset dessert fields
     const dessertPriceInput = document.getElementById("dessert-price");
     const dessertSlicePriceInput = document.getElementById("dessert-slice-price");
     const dessertCategoryInput = document.getElementById("dessert-category");
@@ -430,14 +430,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dessertSlicePriceInput) dessertSlicePriceInput.value = '';
     if (dessertCategoryInput) dessertCategoryInput.value = "Postres";
     
-    // Restaurar botón a "Agregar producto"
+    // Restore button to 'Add product'
     updateModalButton();
     
-    // Resetear variables de edición
+    // Reset edit variables
     editingProductId = null;
   }
 
-  // Configurar botones de categoría
+  // Set up category buttons
   function setupCategoryButtons() {
     const categoryButtons = document.querySelectorAll('.top-buttons .btn');
     
@@ -445,29 +445,29 @@ document.addEventListener("DOMContentLoaded", () => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
         
-        // Remover clase activa de todos los botones
+        // Remove active class from all buttons
         categoryButtons.forEach(btn => {
           btn.classList.remove('active', 'btn-dark');
           btn.classList.add('btn-outline-dark');
         });
         
-        // Agregar clase activa al botón clickeado
+        // Add active class to the clicked button
         button.classList.remove('btn-outline-dark');
         button.classList.add('active', 'btn-dark');
         
-        // Actualizar título de la sección
+        // Update section title
         const sectionTitle = button.textContent.trim();
         const titleElement = document.querySelector('.pt-5.px-0.pb-1 h4');
         if (titleElement) {
           titleElement.textContent = sectionTitle;
         }
         
-        // Filtrar productos por categoría
+        // Filter products by category
         filterProductsByCategory(sectionTitle);
       });
     });
     
-    // Activar "POSTRES" por defecto
+    // Activate 'POSTRES' by default
     const postresBtn = Array.from(categoryButtons).find(btn => 
       btn.textContent.trim() === 'POSTRES'
     );
@@ -484,10 +484,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function filterProductsByCategory(categoryName) {
     if (!container) return;
     
-    // Limpiar contenedor
+    // Clear container
     container.innerHTML = "";
     
-    // Mapeo de nombres de botón a valores de filtro
+    // Map button names to filter values
     const categoryMap = {
       'CON CAFÉ': 'Con café',
       'SIN CAFÉ': 'Sin café', 
@@ -498,14 +498,14 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const filterValue = categoryMap[categoryName] || categoryName;
     
-    // Filtrar productos
+    // Filter products
     const filteredProducts = controller.products.filter(product => {
-      // Si es bebida, verificar la sección
+      // If drink, check section
       if (product.type === 'drink' || product instanceof DrinkProduct) {
         return product.section === filterValue;
       }
       
-      // Si es postre, verificar la categoría
+      // If dessert, check category
       if (product.type === 'dessert' || product instanceof DessertProduct) {
         return product.category === filterValue || 
                (filterValue === 'Postres' && !product.category);
@@ -514,7 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     });
     
-    // Renderizar productos filtrados
+    // Render filtered products
     if (filteredProducts.length === 0) {
       showEmptyState(filterValue);
     } else {
@@ -547,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // RENDER CARD - MANTENIENDO LO QUE FUNCIONA
+  // RENDER CARD - Keeping what works
   function renderCard(product) {
     const col = document.createElement("div");
     col.className = "col-6 col-sm-4 col-md-3 mb-4";
@@ -556,12 +556,12 @@ document.addEventListener("DOMContentLoaded", () => {
     card.className = "card h-100";
     card.style.cursor = "pointer";
     
-    // Si el producto está inactivo, opacarlo
+    // If the product is inactive, make it opaque
     if (!product.isActive) {
       card.style.opacity = "0.6";
     }
 
-    // Badge "Nuevo" o "Promo"
+    // Badge 'New' or 'Promo'
     if (product.isPromo) {
       const promoBadge = document.createElement("p");
       promoBadge.className = "new-drink col-12 text-center pt-1 pb-0 bg-warning text-dark";
@@ -574,7 +574,7 @@ document.addEventListener("DOMContentLoaded", () => {
       card.appendChild(newBadge);
     }
 
-    // Imagen
+    // Image
     const imgContainer = document.createElement("div");
     imgContainer.className = "position-relative";
     
@@ -587,7 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
       img.style.objectFit = "cover";
       imgContainer.appendChild(img);
     } else {
-      // Placeholder basado en el tipo
+      // Placeholder based on type
       const placeholder = document.createElement("div");
       placeholder.className = "card-img-top d-flex align-items-center justify-content-center";
       placeholder.style.height = "180px";
@@ -612,7 +612,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const price = document.createElement("p");
     price.className = "price col-6 text-end";
     
-    // Calcular precio
+    // Calculate price
     if (product.type === 'drink' || product instanceof DrinkProduct) {
       if (product.sizes && Object.values(product.sizes).length > 0) {
         const prices = Object.values(product.sizes);
@@ -621,7 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
         price.textContent = "$0.00";
       }
     } else {
-      // Para postres, mostrar "Desde $precio"
+      // For desserts, show 'From $price'
       price.textContent = product.slicePrice && product.slicePrice > 0 
         ? `Desde $${(product.price || 0).toFixed(2)}`
         : `$${(product.price || 0).toFixed(2)}`;
@@ -636,14 +636,14 @@ document.addEventListener("DOMContentLoaded", () => {
     cardBody.appendChild(description);
     card.appendChild(cardBody);
 
-    // Footer con botones de acción
+    // Footer with action buttons
     const cardFooter = document.createElement("div");
     cardFooter.className = "card-footer card-actions p-2";
     
     const btnGroup = document.createElement("div");
     btnGroup.className = "d-flex justify-content-between";
     
-    // Botón Editar
+    // Edit button
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-sm btn-outline-primary";
     editBtn.textContent = "Editar";
@@ -653,7 +653,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.show();
     });
     
-    // Botón Activar/Desactivar
+    // Activate/Deactivate button
     const toggleBtn = document.createElement("button");
     toggleBtn.className = product.isActive 
       ? "btn btn-sm btn-outline-warning" 
@@ -663,7 +663,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
       const newState = controller.toggleActive(product.id);
       if (newState !== null) {
-        // Actualizar visualmente la tarjeta
+        // Update card visually
         card.style.opacity = newState ? "1" : "0.6";
         toggleBtn.textContent = newState ? "Desactivar" : "Activar";
         toggleBtn.className = newState 
@@ -672,7 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     
-    // Botón Eliminar
+    // Delete button
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "btn btn-sm btn-outline-danger";
     deleteBtn.textContent = "Eliminar";
@@ -691,7 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cardFooter.appendChild(btnGroup);
     card.appendChild(cardFooter);
 
-    // Evento para abrir modal al hacer clic en la card
+    // Open modal when clicking the card
     card.addEventListener("click", (e) => {
       if (!e.target.closest('button')) {
         loadProductIntoModal(product);
@@ -704,7 +704,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function isProductNew(product) {
-    // Lógica para determinar si un producto es nuevo (menos de 7 días)
+    // Logic to determine if a product is new (less than 7 days)
     if (!product.createdAt) return false;
     const createdDate = new Date(product.createdAt);
     const now = new Date();
@@ -713,7 +713,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return diffDays <= 7;
   }
 
-  // Limpiar tamaños de bebida al cargar postre
+  // Clear drink sizes when loading dessert
   document.querySelectorAll('.size-check').forEach(c => {
   c.checked = false;
   const input = document.getElementById(c.dataset.target);
@@ -727,22 +727,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function loadProductIntoModal(product) {
     editingProductId = product.id;
     
-    // Cargar datos básicos
+    // Load basic data
     document.getElementById("product-title").value = product.title || "";
     document.getElementById("product-description").value = product.description || "";
     document.getElementById("prodPromo").checked = product.isPromo || false;
     document.getElementById("product-active").checked = product.isActive !== false;
     
-    // Cargar imagen
+    // Load image
     if (product.image) {
       imagePreview.src = product.image;
       previewWrapper.classList.remove("d-none");
       dropzoneContent.classList.add("d-none");
     }
     
-    // Determinar tipo de producto y cargar datos correspondientes
+    // Determine product type and load corresponding data
     if (product.type === 'drink' || product instanceof DrinkProduct) {
-      // Configurar como bebida
+      // Configure as drink
       const drinkRadio = document.querySelector('input[name="product-type"][value="drink"]');
       if (drinkRadio) {
         drinkRadio.checked = true;
@@ -751,11 +751,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (drinkOptionsSection) drinkOptionsSection.style.display = "block";
       }
       
-      // Cargar sección
+      // Load section
       const sectionSelect = document.getElementById("product-section");
       if (sectionSelect) sectionSelect.value = product.section || "Con café";
       
-      // Cargar tamaños y precios
+      // Load sizes and prices
       const sizesMapping = {
         chico: { checkId: "size-ch", priceId: "price-ch" },
         mediano: { checkId: "size-m", priceId: "price-m" },
@@ -773,21 +773,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
       
-      // Cargar temperaturas
+      // Load temperatures
       if (product.temperatures) {
         document.querySelectorAll('input[name="temperatures[]"]').forEach(input => {
           input.checked = product.temperatures.includes(input.value);
         });
       }
       
-      // Cargar tipos de leche
+      // Load milk types
       if (product.milks) {
         document.querySelectorAll('input[name="milks[]"]').forEach(input => {
           input.checked = product.milks.includes(input.value);
         });
       }
       
-      // Cargar extras
+      // Load extras
       if (product.extras) {
         document.querySelectorAll('input[name="extras[]"]').forEach(input => {
           input.checked = product.extras.includes(input.value);
@@ -795,7 +795,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       
     } else if (product.type === 'dessert' || product instanceof DessertProduct) {
-      // Configurar como postre
+      // Configure as dessert
       const dessertRadio = document.querySelector('input[name="product-type"][value="dessert"]');
       if (dessertRadio) {
         dessertRadio.checked = true;
@@ -804,13 +804,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (drinkOptionsSection) drinkOptionsSection.style.display = "none";
       }
       
-      // Cargar categoría
+      // Load category
       const categorySelect = document.getElementById("dessert-category");
       if (categorySelect) {
         categorySelect.value = product.category || "Postres";
       }
       
-      // Cargar precios
+      // Load prices
       const priceInput = document.getElementById("dessert-price");
       const slicePriceInput = document.getElementById("dessert-slice-price");
       
@@ -823,14 +823,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     
-    // Actualizar el botón del modal a "Actualizar producto"
+    // Update modal button to 'Update product'
     updateModalButton();
   }
 
-  // Inicializar botón del modal
+  // Initialize modal button
   updateModalButton();
 
-  // Botón "AGREGAR +" en la página
+  // 'ADD +' button on the page
   const addNewBtn = document.querySelector('button[data-bs-target="#modal-drink"]');
   if (addNewBtn) {
     addNewBtn.addEventListener("click", () => {

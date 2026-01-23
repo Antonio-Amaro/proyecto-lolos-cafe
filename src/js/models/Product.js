@@ -7,7 +7,7 @@ export class Product {
     this.image = image;
     this.isActive = isActive;
     this.createdAt = new Date().toISOString();
-    this.type = "product"; // Por defecto
+    this.type = "product"; // By default
   }
 }
 
@@ -27,10 +27,10 @@ export class DrinkProduct extends Product {
 export class DessertProduct extends Product {
   constructor(id, title, description, image, isActive, price, isPromo = false, category = "Postres", slicePrice = 0) {
     super(id, title, description, image, isActive);
-    this.price = price || 0; // Precio por pieza completa
+    this.price = price || 0; // Price for full piece
     this.isPromo = isPromo;
-    this.category = category; // Postres, Extras, Promociones
-    this.slicePrice = slicePrice || 0; // Precio por rebanada (opcional)
+    this.category = category; // Desserts, Extras, Promotions
+    this.slicePrice = slicePrice || 0; // Price per slice (optional)
     this.type = "dessert";
   }
 }

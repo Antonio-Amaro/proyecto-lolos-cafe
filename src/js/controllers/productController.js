@@ -45,7 +45,7 @@ export class ProductsController {
     this.currentId = storedId;
 
     this.products = storedProducts.map(p => {
-      // Si tiene la propiedad "type" (nueva versión)
+      // If it has the "type" property (new version)
       if (p.type === "drink") {
         return new DrinkProduct(
           p.id,
@@ -74,7 +74,7 @@ export class ProductsController {
         );
       }
       
-      // Para compatibilidad con versiones anteriores (sin propiedad type)
+      // For backward compatibility (without 'type' property)
       if (p.section !== undefined) {
         return new DrinkProduct(
           p.id,
@@ -91,7 +91,7 @@ export class ProductsController {
         );
       }
 
-      // Asumir que es un postre antiguo
+      // Assume it's an older dessert
       return new DessertProduct(
         p.id,
         p.title,
@@ -119,19 +119,19 @@ export class ProductsController {
     return product.isActive;
   }
 
-  // MÉTODO ACTUALIZADO PARA MANEJAR CAMBIOS DE TIPO
+  // UPDATED METHOD TO HANDLE TYPE CHANGES
   updateProduct(id, newProductData) {
     const index = this.products.findIndex(p => p.id === id);
     if (index === -1) return null;
     
-    // Reemplazar el producto completo
+    // Replace the entire product
     this.products[index] = newProductData;
     this.saveToStorage();
     
     return this.products[index];
   }
 
-  // NUEVO MÉTODO: Verificar si un producto existe
+  // NEW METHOD: Check if a product exists
   getProductById(id) {
     return this.products.find(p => p.id === id);
   }
