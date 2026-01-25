@@ -9,7 +9,7 @@
 	const changeBtn = document.getElementById("changeImageBtn");
 	const removeBtn = document.getElementById("removeImageBtn");
 
-	if (!dropzone || !input) return; // Evita errores si no existe el bloque en esta página	
+	if (!dropzone || !input) return; // Avoid errors if the block doesn't exist on this page	
 		const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 	const VALID_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];	
 	function showError(msg) {
@@ -56,17 +56,17 @@
 		toPreview(file);
 	}
 
-	// Click en dropzone abre el input
+	// Click on dropzone opens the file input
 	dropzone.addEventListener("click", () => input.click());
 
-	// Accesibilidad: Enter/Espacio activan
+	// Accessibility: Enter/Space activate
 	dropzone.addEventListener("keydown", (e) => {
 		if (e.key === "Enter" || e.key === " ") {
      	e.preventDefault();
      	input.click();
 	}});
 
-	// Cambios desde el selector
+	// Changes from the file picker
 	input.addEventListener("change", (e) => handleFiles(e.target.files));
 
   // Drag & drop
@@ -90,7 +90,7 @@
 		handleFiles(dt.files);
 	});
 
-  // Botones de acción
+  // Action buttons
 	changeBtn?.addEventListener("click", () => input.click());
 	removeBtn?.addEventListener("click", resetPreview);
 })();
@@ -103,3 +103,71 @@ links.forEach(a => {
 	a.classList.add('active');
 	});
 });
+
+// The price field only appears if you select the size.
+document.querySelectorAll('.size-check').forEach(check => {
+  check.addEventListener('change', function () {
+    const input = document.getElementById(this.dataset.target);
+
+    if (this.checked) {
+      input.classList.remove('d-none');
+      input.required = true;
+    } else {
+      input.classList.add('d-none'); //display none, here it is added and then the input is hidden
+      input.value = '';
+      input.required = false;
+    }
+  });
+});
+
+// // Function to handle toggle between drinks and desserts
+// function setupProductTypeToggle() {
+//   const drinkRadio = document.querySelector('input[name="product-type"][value="drink"]');
+//   const dessertRadio = document.querySelector('input[name="product-type"][value="dessert"]');
+//   const drinkSection = document.getElementById('drink-section');
+  
+//   if (!drinkRadio || !dessertRadio || !drinkSection) return;
+  
+//   // Create dessert section if it doesn't exist
+//   let dessertSection = document.getElementById('dessert-section');
+//   if (!dessertSection) {
+//     dessertSection = document.createElement('div');
+//     dessertSection.id = 'dessert-section';
+//     dessertSection.style.display = 'none';
+//     dessertSection.innerHTML = `
+//       <label class="form-label"><strong>Sección</strong></label>
+//       <select id="dessert-category" class="form-select mb-3">
+//         <option>Postres</option>
+//         <option>Extras</option>
+//         <option>Promociones</option>
+//       </select>
+      
+//       <div class="mb-3">
+//         <label for="dessert-unit-price" class="form-label"><strong>Precio por unidad</strong></label>
+//         <input type="number" id="dessert-unit-price" class="form-control" placeholder="$0.00" min="0" step="0.01">
+//       </div>
+      
+//       <div class="mb-3">
+//         <label for="dessert-slice-price" class="form-label"><strong>Precio por rebanada (opcional)</strong></label>
+//         <input type="number" id="dessert-slice-price" class="form-control" placeholder="$0.00" min="0" step="0.01">
+//       </div>
+//     `;
+    
+//     // Insert after the drinks section
+//     drinkSection.parentNode.insertBefore(dessertSection, drinkSection.nextSibling);
+//   }
+  
+//   // Handle changes
+//   drinkRadio.addEventListener('change', () => {
+//     drinkSection.style.display = 'block';
+//     dessertSection.style.display = 'none';
+//   });
+  
+//   dessertRadio.addEventListener('change', () => {
+//     drinkSection.style.display = 'none';
+//     dessertSection.style.display = 'block';
+//   });
+// }
+
+// // Call when the DOM is ready
+// document.addEventListener('DOMContentLoaded', setupProductTypeToggle);
