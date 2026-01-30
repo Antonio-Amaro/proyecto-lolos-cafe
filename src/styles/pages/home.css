@@ -1,0 +1,61 @@
+.btn{
+  background-color: #5a6b43;
+  border: none;
+  border-radius: 0;
+  color: white;
+}
+.hero a {
+  background-color: #000000;
+  border: none;
+  border-radius: 0;
+  color: white;
+}
+.log-in h2 {
+  color: #4f5d3a;
+}
+
+.carousel {
+border: 5px;
+display: flex;
+overflow-x: auto;
+}
+.carousel::-webkit-scrollbar {
+display: none;
+}
+.card {
+    /* flex: 0 0 5em; */
+    height: 200px;
+    width: 200px;
+    border: none;
+    font-size: 3rem;
+    text-align: center;
+    align-content: center;
+}
+@media (min-width: 768px) {
+    .card {
+        height: 250px;
+        width: 250px;
+    }
+}
+.card img {
+    height: 200px;
+    width: 200px;
+    object-fit: contain;
+}
+@media (min-width: 768px) {
+    .card img {
+        height: 250px;
+        width: 250px;
+    }
+}
+.group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    animation: spin 15s infinite linear;
+}
+@keyframes spin {
+  from {translate: 0;}
+  to {translate: -100%;}
+}
