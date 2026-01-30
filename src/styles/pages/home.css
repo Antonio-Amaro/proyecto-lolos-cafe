@@ -1,11 +1,32 @@
-    .hero-index a {
-      background-color: #000000;
-      border: none;
-      border-radius: 0;
-      color: white;
+    .hero-index h1 {
+        font-size: var(--fs-display-sm);
+    }
+    @media (min-width: 992px) {
+        .hero-index h1 {
+            font-size: var(--fs-display-md);
+        }
+    }
+    .dessert-index {
+        transition: transform 400ms;
+    }
+    .dessert-index:hover {
+        transform: scale(1.02);
+        transition: transform 400ms;
+    }
+    .dessert-index-green {
+        background-color: var(--color-secondary);
+        color: white;
+    }
+    .dessert-index-white {
+        background-color: var(--color-bg);
     }
     .log-in h2 {
       color: #4f5d3a;
+    }
+    .login-index {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
     }
     .carousel {
     border: 5px;
@@ -17,7 +38,7 @@
     }
     .card-carousel {
         /* flex: 0 0 5em; */
-        height: 200px;
+        height: 100%;
         width: 200px;
         border: none;
         font-size: 3rem;
@@ -26,7 +47,7 @@
     }
     @media (min-width: 768px) {
         .card-carousel {
-            height: 250px;
+            height: 100%;
             width: 250px;
         }
     }
