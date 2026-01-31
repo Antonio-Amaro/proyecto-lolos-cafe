@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usuarios - Lolo's Café (Admin)</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <!-- Your site CSS (optional) -->
+  <link rel="stylesheet" href="/src/styles/main.css" />
+
+  <style>
+    .nav-top-buttons {
+      display: flex;
+      gap: 0;
+    }
+
+    .nav-top-buttons .nav-item {
+      flex: 1 1 0;
+    }
+
+    .nav-top-buttons .nav-link {
+      border: 1px solid #222;
+      border-radius: 0 !important;
+      color: #222;
+      width: 100%;
+      letter-spacing: .3px;
+      font-weight: 600;
+    }
+
+    .nav-top-buttons .nav-item+.nav-item .nav-link {
+      border-left: 0;
+    }
+
+    .nav-top-buttons .nav-link.active,
+    .nav-top-buttons .nav-link[aria-selected="true"] {
+      background: #222;
+      color: #fff !important;
+      border-color: #222 !important;
+    }
+
+    .users-search .form-control {
+      border-radius: 0;
+      padding-left: 2.25rem;
+      height: 42px;
+    }
+
+    .users-search .search-icon {
+      position: absolute;
+      left: .75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+    }
+
+    .users-table thead th {
+      background: #efefef !important;
+      border-bottom: 0;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .users-table td,
+    .users-table th {
+      vertical-align: middle;
+    }
+
+    .users-table .icon-col {
+      width: 44px;
+      text-align: center;
+    }
+
+    .users-table .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #bbb;
+      color: #000;
+      opacity: .9;
+    }
+
+    .users-table .gear {
+      color: #000;
+      opacity: .7;
+    }
+
+    .page-title {
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .card-clean {
+      border: 1px solid #e9ecef;
+      border-radius: .25rem;
+      overflow: hidden;
+    }
+
+    .modal-content {
+      border-radius: 0;
+    }
+
+    .modal .form-control,
+    .modal .form-select {
+      border-radius: 0;
+    }
+
+    .users-bar .nav-top-buttons {
+      flex: 0 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header  -->
+  <div id="header-placeholder"></div>
+
+  <main class="container-fluid">
+    <div class="row g-0">
+      <!-- Sidebar  -->
+      <section id="sidebar-placeholder" class="admin-sidebar-container col-12 col-md-2 p-2 border-end min-vh-100">
+      </section>
+
+      <!-- Content -->
+      <section class="col-12 col-md-10 p-3">
+        <h3 class="page-title">Usuarios</h3>
+
+        <!-- Search and Admins/Clients tabs -->
+        <div class="d-flex align-items-center gap-3 mb-2 flex-wrap users-bar">
+          <!-- Search  -->
+          <div class="position-relative users-search flex-grow-1" style="min-width: 260px;">
+            <i class="bi bi-search search-icon"></i>
+            <input id="searchInput" type="search" class="form-control" placeholder="Buscar usuario, correo o celular">
+          </div>
+
+          <!-- Admins / Clients top-buttons  -->
+          <ul class="nav segmented nav-top-buttons mb-0 flex-nowrap" role="tablist">
+            <li class="nav-item" role="presentation" style="min-width: 220px;">
+              <button class="nav-link btn btn-outline-dark rounded-0 w-100 active" id="tab-admins" type="button"
+                role="tab" aria-selected="true" data-entity="admins">
+                ADMINISTRADORES
+              </button>
+            </li>
+            <li class="nav-item" role="presentation" style="min-width: 220px;">
+              <button class="nav-link btn btn-outline-dark rounded-0 w-100" id="tab-clients" type="button" role="tab"
+                aria-selected="false" data-entity="clients">
+                CLIENTES
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Table -->
+        <div class="card-clean mt-3">
+          <div class="table-responsive">
+            <table class="table users-table mb-0">
+              <thead id="tableHead"><!-- Rendered by JS --></thead>
+              <tbody id="tableBody"><!-- Rendered by JS --></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Toast  -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1056">
+    <div id="saveToast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMsg">Cambios guardados.</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal  -->
+  <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="editUserForm" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalTitle">Editar usuario</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Hidden state -->
+            <input type="hidden" id="editUserId">
+            <input type="hidden" id="editUserType">
+
+            <!-- Admin fields -->
+            <div id="adminFields" class="d-none">
+              <div class="mb-3">
+                <label for="adminName" class="form-label">Nombre</label>
+                <input type="text" id="adminName" class="form-control" required>
+                <div class="invalid-feedback">Ingresa el nombre.</div>
+              </div>
+              <div class="mb-3">
+                <label for="adminRole" class="form-label">Rol</label>
+                <select id="adminRole" class="form-select" required>
+                  <option value="Administrador">Administrador</option>
+                  <option value="Empleado">Empleado</option>
+                </select>
+                <div class="invalid-feedback">Selecciona un rol.</div>
+              </div>
+              <div class="mb-3">
+                <label for="adminStatus" class="form-label">Estado</label>
+                <select id="adminStatus" class="form-select" required>
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
+                  <option value="Suspendido">Suspendido</option>
+                </select>
+                <div class="invalid-feedback">Selecciona un estado.</div>
+              </div>
+            </div>
+
+            <!-- Client fields -->
+            <div id="clientFields" class="d-none">
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Nombre</label>
+                <input type="text" id="clientName" class="form-control" required>
+                <div class="invalid-feedback">Ingresa el nombre.</div>
+              </div>
+              <div class="mb-3">
+                <label for="clientEmail" class="form-label">Correo</label>
+                <input type="email" id="clientEmail" class="form-control" required>
+                <div class="invalid-feedback">Ingresa un correo válido.</div>
+              </div>
+              <div class="mb-3">
+                <label for="clientPhone" class="form-label">Celular</label>
+                <input type="tel" id="clientPhone" class="form-control" placeholder="000 000 0000" required>
+                <div class="invalid-feedback">Ingresa un teléfono.</div>
+              </div>
+            </div>
+
+            <!-- Danger zone -->
+            <div class="border-top pt-3 mt-2">
+              <button type="button" id="deleteUserBtn" class="btn btn-outline-danger w-100 rounded-0">
+                <i class="bi bi-trash3 me-1"></i> Eliminar usuario
+              </button>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary rounded-0" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-dark rounded-0">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+  <script type="module" src="/src/js/utils/loadComponents.js"></script>
+
+  <script>
+    // ===========================================
+    // Users page: top-buttons tabs, modal edit/delete
+    // Persist single edits; update table immediately
+    // ===========================================
+    // --- LocalStorage key ---
+    const LS_KEY = 'lolos_users_v1';
+
+    // --- Seed dataset (random) ---
+    const SEED = {
+      admins: [
+        { id: 1, name: 'Ana López', role: 'Administrador', status: 'Activo', lastActive: 'Hace 3 min' },
+        { id: 2, name: 'Carlos Méndez', role: 'Administrador', status: 'Inactivo', lastActive: 'Hace 2 días' },
+        { id: 3, name: 'Brenda Torres', role: 'Empleado', status: 'Activo', lastActive: 'Hace 12 min' },
+        { id: 4, name: 'Diego Ramírez', role: 'Administrador', status: 'Activo', lastActive: 'Hace 1 h' },
+        { id: 5, name: 'Elena Vargas', role: 'Empleado', status: 'Suspendido', lastActive: 'Hace 5 días' },
+        { id: 6, name: 'Fabián Ortega', role: 'Administrador', status: 'Activo', lastActive: 'Hace 47 min' },
+      ],
+      clients: [
+        { id: 101, name: 'María Ríos', email: 'maria.rios@example.com', phone: '554 123 9876' },
+        { id: 102, name: 'Óscar Pérez', email: 'oscar.pz@example.com', phone: '553 221 0045' },
+        { id: 103, name: 'Paulina Neri', email: 'paulina.neri@example.com', phone: '551 987 0001' },
+        { id: 104, name: 'Raúl Gómez', email: 'raul.gmz@example.com', phone: '552 665 7788' },
+        { id: 105, name: 'Sara Campos', email: 'sara.campos@example.com', phone: '555 010 2222' },
+      ],
+    };
+
+    // --- State (load from localStorage or seed) ---
+    let DATA = loadFromStorage() || SEED;
+    let currentTab = 'admins';
+    let currentQuery = '';
+
+    // --- DOM refs ---
+    const tableHead = document.getElementById('tableHead');
+    const tableBody = document.getElementById('tableBody');
+    const searchInput = document.getElementById('searchInput');
+
+    const btnTabAdmins = document.getElementById('tab-admins');
+    const btnTabClients = document.getElementById('tab-clients');
+
+    const toastEl = document.getElementById('saveToast');
+    const toastMsg = document.getElementById('toastMsg');
+    const toast = toastEl ? new bootstrap.Toast(toastEl) : null;
+
+    // Modal + fields
+    const editModalEl = document.getElementById('editUserModal');
+    const editModal = new bootstrap.Modal(editModalEl);
+    const editForm = document.getElementById('editUserForm');
+
+    const editUserId = document.getElementById('editUserId');
+    const editUserType = document.getElementById('editUserType');
+
+    const adminFields = document.getElementById('adminFields');
+    const adminName = document.getElementById('adminName');
+    const adminRole = document.getElementById('adminRole');
+    const adminStatus = document.getElementById('adminStatus');
+
+    const clientFields = document.getElementById('clientFields');
+    const clientName = document.getElementById('clientName');
+    const clientEmail = document.getElementById('clientEmail');
+    const clientPhone = document.getElementById('clientPhone');
+
+    const deleteUserBtn = document.getElementById('deleteUserBtn');
+
+    // --------------------------
+    // Storage helpers
+    // --------------------------
+    function loadFromStorage() {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        console.warn('Failed to parse localStorage', e);
+        return null;
+      }
+    }
+    function saveToStorage() {
+      localStorage.setItem(LS_KEY, JSON.stringify(DATA));
+    }
+
+    // --------------------------
+    // Rendering: head + body
+    // --------------------------
+    function renderHead() {
+      if (currentTab === 'admins') {
+        tableHead.innerHTML = `
+          <tr>
+            <th class="icon-col"><i class="bi bi-person"></i></th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Actividad</th>
+            <th class="icon-col"><i class="bi bi-gear"></i></th>
+          </tr>
+        `;
+      } else {
+        tableHead.innerHTML = `
+          <tr>
+            <th class="icon-col"><i class="bi bi-person"></i></th>
+            <th>Usuario</th>
+            <th>Correo Electrónico</th>
+            <th>Celular</th>
+            <th class="icon-col"><i class="bi bi-gear"></i></th>
+          </tr>
+        `;
+      }
+    }
+
+    function matchesQuery(item, query) {
+      const q = (query || '').trim().toLowerCase();
+      if (!q) return true;
+      const fields = [item.name, item.role, item.status, item.lastActive, item.email, item.phone]
+        .filter(Boolean)
+        .map(v => String(v).toLowerCase());
+      return fields.some(v => v.includes(q));
+    }
+
+    function renderBody() {
+      const list = DATA[currentTab].filter(x => matchesQuery(x, currentQuery));
+      if (currentTab === 'admins') {
+        tableBody.innerHTML = list.map(u => `
+          <tr>
+            <td class="icon-col"><span class="avatar"><i class="bi bi-person"></i></span></td>
+            <td>${u.name}</td>
+            <td>${u.role}</td>
+            <td>${u.status}</td>
+            <td>${u.lastActive}</td>
+            <td class="icon-col">
+              <button class="btn btn-link p-0 gear" title="Editar" data-entity="admins" data-id="${u.id}">
+                <i class="bi bi-gear"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } else {
+        tableBody.innerHTML = list.map(c => `
+          <tr>
+            <td class="icon-col"><span class="avatar"><i class="bi bi-person"></i></span></td>
+            <td>${c.name}</td>
+            <td>${c.email}</td>
+            <td>${c.phone}</td>
+            <td class="icon-col">
+              <button class="btn btn-link p-0 gear" title="Editar" data-entity="clients" data-id="${c.id}">
+                <i class="bi bi-gear"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function renderAll() {
+      renderHead();
+      renderBody();
+    }
+
+    // --------------------------
+    // Tabs behavior 
+    // --------------------------
+    function setTab(tab) {
+      if (tab === currentTab) return;
+      currentTab = tab;
+
+      // Remove 'active' and set aria-selected="false" on both
+      [btnTabAdmins, btnTabClients].forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+
+      // Activate current
+      const btn = (currentTab === 'admins') ? btnTabAdmins : btnTabClients;
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      // Re-render table
+      renderAll();
+    }
+
+    btnTabAdmins.addEventListener('click', () => setTab('admins'));
+    btnTabClients.addEventListener('click', () => setTab('clients'));
+
+    // --------------------------
+    // Search 
+    // --------------------------
+    let searchTimer = null;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        currentQuery = e.target.value || '';
+        renderBody();
+      }, 120);
+    });
+
+    // --------------------------
+    // Open modal from gear button
+    // --------------------------
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.gear');
+      if (!btn) return;
+
+      const entity = btn.getAttribute('data-entity'); // 'admins' | 'clients'
+      const id = Number(btn.getAttribute('data-id'));
+      const record = DATA[entity].find(x => x.id === id);
+      if (!record) return;
+
+      // Reset validation
+      editForm.classList.remove('was-validated');
+
+      // Fill hidden fields
+      editUserId.value = String(id);
+      editUserType.value = entity;
+
+      // Toggle field groups + assign values
+      if (entity === 'admins') {
+        document.getElementById('editModalTitle').textContent = 'Editar administrador';
+        adminFields.classList.remove('d-none'); clientFields.classList.add('d-none');
+        adminName.value = record.name || '';
+        adminRole.value = record.role || 'Empleado';
+        adminStatus.value = record.status || 'Activo';
+      } else {
+        document.getElementById('editModalTitle').textContent = 'Editar cliente';
+        clientFields.classList.remove('d-none'); adminFields.classList.add('d-none');
+        clientName.value = record.name || '';
+        clientEmail.value = record.email || '';
+        clientPhone.value = record.phone || '';
+      }
+
+      editModal.show();
+    });
+
+    // --------------------------
+    // Save (modal submit) — persist only edited user
+    // --------------------------
+    editForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!editForm.checkValidity()) {
+        editForm.classList.add('was-validated');
+        return;
+      }
+
+      const entity = editUserType.value; // 'admins' | 'clients'
+      const id = Number(editUserId.value);
+      const list = DATA[entity];
+      const idx = list.findIndex(x => x.id === id);
+      if (idx === -1) return;
+
+      if (entity === 'admins') {
+        list[idx] = {
+          ...list[idx],
+          name: adminName.value.trim(),
+          role: adminRole.value,
+          status: adminStatus.value,
+        };
+      } else {
+        list[idx] = {
+          ...list[idx],
+          name: clientName.value.trim(),
+          email: clientEmail.value.trim(),
+          phone: clientPhone.value.trim(),
+        };
+      }
+
+      saveToStorage();
+      renderBody();
+      editModal.hide();
+
+      toastMsg.textContent = 'Cambios guardados.';
+      toast?.show();
+    });
+
+    // --------------------------
+    // Delete (inside modal) — ask for confirmation
+    // --------------------------
+    deleteUserBtn.addEventListener('click', () => {
+      const entity = editUserType.value;
+      const id = Number(editUserId.value);
+      const list = DATA[entity];
+
+      if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) return;
+
+      const idx = list.findIndex(x => x.id === id);
+      if (idx === -1) return;
+
+      list.splice(idx, 1);
+      saveToStorage();
+      renderBody();
+      editModal.hide();
+
+      toastMsg.textContent = 'Usuario eliminado.';
+      toast?.show();
+    });
+
+    // --------------------------
+    // Initial render
+    // --------------------------
+    renderAll();
+  </script>
+</body>
+
+</html>
